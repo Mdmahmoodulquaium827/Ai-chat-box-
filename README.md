@@ -1,5 +1,7 @@
 Advanced Intelligent Special Home Assistant
-(A.I.S.H.A)
+                (A.I.S.H.A)
+
+                
 A.I.S.H.A (Advanced Intelligent Special Home Assistant) is a Python-based intelligent desktop
 application designed to provide an integrated AI-powered assistant experience. The system
 combines modern GUI design, secure authentication, AI-driven text and image understanding, and
