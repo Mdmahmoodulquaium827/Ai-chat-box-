@@ -1,0 +1,100 @@
+
+from paths import IMAGE_PATHS
+from tkinter import *
+import tkinter as tk
+from tkinter import Label
+from tkinter import messagebox
+from PIL import Image,ImageTk
+from customtkinter import *
+import customtkinter as ctk
+from auth_service import AuthService
+class Login(ctk.CTkFrame):
+    def __init__(self,parent, controller):
+        super().__init__(parent)
+        self.email = tk.StringVar()
+        self.password = tk.StringVar()
+        
+        IMAGES = {k: ImageTk.PhotoImage(Image.open(v)) for k, v in IMAGE_PATHS.items()}
+        #----------------------IMAGE PART-------------------------------
+
+        self.phone_image = IMAGES["bg"]
+        self.lbl_img1=Label(self,image=self.phone_image,bg='white').place(x=0,y=0,width=5000,height=5000)
+
+
+        #----------------------Login Frame------------------------------
+
+        Login_frame = CTkFrame(self,bg_color="white",fg_color="black",corner_radius=10,width=310,height=340)
+        Login_frame.place(x=800,y=160)
+
+        tittle = CTkLabel(Login_frame,text="Login",text_color='white',font=("Comic Sans MS",40,"bold"),fg_color="black")
+        tittle.place(x=0,y=20,relwidth=1)
+
+        username= CTkLabel(Login_frame,text="Email",text_color='white', font=("Andalus",15),fg_color="black")
+        username.place(x=50,y=80)
+
+        user = CTkEntry(Login_frame,textvariable=self.email,font=("times new roman",15),width=200,corner_radius=15)
+        user.place(x=50,y=110)
+
+        password = CTkLabel(Login_frame, text="Password",text_color='white', font=("Andalus",15), fg_color="black")
+        password.place(x=50, y=150)
+
+        pas = CTkEntry(Login_frame,show="*",textvariable=self.password, font=("times new roman", 15),width=200,corner_radius=15)
+        pas.place(x=50, y=180)
+
+        button = CTkButton(Login_frame,command=lambda: self.login(controller),text="Log In",text_color="white",font=("Arial Rounded MT Bold",20),cursor="hand2",corner_radius=15,width=150,height=30,hover_color="deepskyblue",fg_color="deepskyblue")
+        button.place(x=75,y=230)
+
+        hr = (Label(Login_frame,bg="lightgray").place(x=55,y=420, width=350,height=3))
+        rr = Label(Login_frame,text="OR",bg="black",fg="lightgray",font=("times new roman", 15,"bold"))
+        rr.place(x=207,y=405)
+
+        forgetpass = Button(Login_frame,text="Forget Password??",font=("times new roman", 20,"bold"),bg="black",fg="gold",bd=0,activebackground="black",activeforeground="gold",command=lambda: controller.show_frame("Forget_pass"))
+        forgetpass.place(x=110, y=440)
+
+        # ----------------------Login Frame 2------------------------------
+
+        Register_frame = CTkFrame(self, bg_color="white",corner_radius=10,  fg_color="black", width=310, height=40)
+        Register_frame.place(x=800, y=510)
+
+        reg = Label(Register_frame,text="Don't have an account?",font=("times new roman", 13),bg="black",fg="white")
+        reg.place(x=120,y=15)
+
+        sign_up = Button(Register_frame, text="Sign Up",font=("times new roman", 13,"bold"), bg="black",fg="gold", bd=0, activebackground="black",activeforeground="gold",command=lambda: controller.show_frame("Signup"))
+        sign_up.place(x=270,y=14)
+
+        #---------------------Animation Image-----------------------
+
+        # Inside __init__
+        self.images = [IMAGES[f"ui{i}"] for i in range(1, 8)]
+        self.img_index = 0
+
+# Make sure this Label exists BEFORE starting animation
+        self.lb1_animation = Label(self, bg="white")
+        self.lb1_animation.place(x=200, y=200, width=700, height=700)
+
+# Start animation
+        self.animation()
+
+
+# Outside __init__ (same indentation level as __init__)
+    def animation(self):
+        self.lb1_animation.config(image=self.images[self.img_index])
+        self.img_index = (self.img_index + 1) % len(self.images)
+        self.lb1_animation.after(4000, self.animation)
+
+
+
+       #----------------------Login function part----------------------
+
+    def login(self,controller):
+
+        if AuthService.is_logined(self.email.get(), self.password.get()):
+            messagebox.showinfo(title="Login Success", message="You Successfully Logged in")
+            controller.show_frame("Chatbox")
+            self.email.set("")
+            self.password.set("")
+        else:
+            messagebox.showerror("Login Failed", "Invalid email or password")
+
+
+
